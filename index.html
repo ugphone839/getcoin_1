@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoàn Thành Nhận Coin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            text-align: center;
+            flex-direction: column;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .loading {
+            color: #007bff;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .success {
+            color: #28a745;
+        }
+        .coin-amount {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffc107;
+            margin: 15px 0;
+            border: 2px solid #ffc107;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+        .message-detail {
+            font-size: 1.1em;
+            color: #555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="status-title" class="loading">Đang Xử Lý Yêu Cầu...</h1>
+        <p class="coin-amount" id="coin-display">Đang tải...</p>
+        <p class="message-detail" id="message">Vui lòng chờ trong giây lát. Hệ thống đang tiến hành gọi API để cộng Coin vào tài khoản Discord của bạn.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get('user_id');
+            const amount = params.get('amount');
+            const uuid = params.get('uuid');
+            const botApi = params.get('api'); 
+
+            const statusTitle = document.getElementById('status-title');
+            const messageEl = document.getElementById('message');
+            const coinDisplay = document.getElementById('coin-display');
+            
+            const formatCoin = (num) => {
+                try {
+                    return new Intl.NumberFormat('vi-VN').format(num);
+                } catch (e) {
+                    return num;
+                }
+            };
+
+            if (!userId || !amount || !uuid || !botApi) {
+                statusTitle.textContent = "❌ Lỗi Truy Cập";
+                statusTitle.className = 'error';
+                messageEl.textContent = "Thiếu thông tin cần thiết. Vui lòng thử lại bằng cách sử dụng lệnh /getcoin trên Discord.";
+                coinDisplay.textContent = "0 Coin";
+                return;
+            }
+
+            coinDisplay.textContent = `+${formatCoin(amount)} Coin`;
+
+            const claimUrl = `${botApi}?user_id=${userId}&amount=${amount}&uuid=${uuid}`;
+
+            fetch(claimUrl)
+                .then(response => {
+                    return response.text().then(text => ({
+                        ok: response.ok,
+                        status: response.status,
+                        text: text
+                    }));
+                })
+                .then(({ ok, status, text }) => {
+                    if (ok) {
+                        statusTitle.textContent = "✅ Hoàn Thành & Cộng Coin!";
+                        statusTitle.className = 'success';
+                        messageEl.innerHTML = `Bạn đã hoàn thành vượt link thành công! Hệ thống đã cộng **${formatCoin(amount)} Coin** vào tài khoản của bạn. <br><br> **Cảm ơn bạn đã sử dụng Bot!**`;
+                    } else {
+                        statusTitle.textContent = "⚠️ Lỗi Cộng Coin";
+                        statusTitle.className = 'error';
+                        let errorDetail = text || `Mã lỗi HTTP: ${status}`;
+                        messageEl.innerHTML = `Đã xảy ra lỗi khi cố gắng cộng Coin. Có thể yêu cầu đã **hết hạn** hoặc **đã được sử dụng**.\n\nChi tiết lỗi từ Bot: <br> <code>${errorDetail}</code>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching bot API:', error);
+                    statusTitle.textContent = "❌ Lỗi Kết Nối";
+                    statusTitle.className = 'error';
+                    messageEl.textContent = `Không thể kết nối với máy chủ Bot (${botApi}). Vui lòng liên hệ Admin.`;
+                });
+        });
+    </script>
+</body>
+</html>
