@@ -1,5 +1,5 @@
 {
-  "name": "getcoin-vercel-simple-callback",
+  "name": "getcoin-vercel-callback",
   "version": "1.0.0",
   "description": "Vercel Serverless Function for shortlink claim.",
   "main": "api/claim.js",
