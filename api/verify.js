@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
     const { user_id, type, token } = req.query;
 
-    const SECRET = "YOUR_SECRET_KEY";
+    const SECRET = "k3y_9xA72PqLm!2048";
 
     if (token !== SECRET)
         return res.status(403).send("Invalid token");
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
             body: JSON.stringify({ user_id, amount: reward, type })
         });
     } catch(e) {
-        console.log("CALLBACK FAILED:", e);
+        console.log("CALLBACK ERROR:", e);
     }
 
     return res.redirect(`/thankyou?coin=${reward}`);
