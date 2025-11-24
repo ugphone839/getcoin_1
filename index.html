@@ -3,122 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoàn Thành Nhận Coin</title>
+    <title>Hoàn Thành Vượt Link</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f4f4f9;
+            background-color: #f0f2f5;
             text-align: center;
-            flex-direction: column;
         }
         .container {
-            background: white;
+            background-color: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
             width: 90%;
         }
         h1 {
-            font-size: 2em;
+            color: #1877f2;
+            font-size: 24px;
             margin-bottom: 10px;
         }
-        .loading {
-            color: #007bff;
+        p {
+            color: #606770;
+            margin-bottom: 25px;
+            font-size: 16px;
         }
-        .error {
-            color: #dc3545;
+        #claim-button {
+            background-color: #42b72a; /* Màu xanh lá cây */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        #claim-button:hover:not(:disabled) {
+            background-color: #36a420;
+        }
+        #claim-button:disabled {
+            background-color: #a8a8a8;
+            cursor: not-allowed;
+        }
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 20px;
         }
         .success {
-            color: #28a745;
+            color: #42b72a;
         }
-        .coin-amount {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #ffc107;
-            margin: 15px 0;
-            border: 2px solid #ffc107;
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-        }
-        .message-detail {
-            font-size: 1.1em;
-            color: #555;
-            margin-top: 20px;
+        .error {
+            color: #fa383e;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 id="status-title" class="loading">Đang Xử Lý Yêu Cầu...</h1>
-        <p class="coin-amount" id="coin-display">Đang tải...</p>
-        <p class="message-detail" id="message">Vui lòng chờ trong giây lát. Hệ thống đang tiến hành gọi API để cộng Coin vào tài khoản Discord của bạn.</p>
+        <h1>🎉 Hoàn Tất Vượt Link</h1>
+        <p>Bấm vào nút bên dưới để xác nhận và nhận Coin vào tài khoản Discord của bạn.</p>
+        
+        <button id="claim-button">Nhận Coin Ngay</button>
+        
+        <div id="status"></div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const userId = params.get('user_id');
-            const amount = params.get('amount');
-            const uuid = params.get('uuid');
-            const botApi = params.get('api'); 
-
-            const statusTitle = document.getElementById('status-title');
-            const messageEl = document.getElementById('message');
-            const coinDisplay = document.getElementById('coin-display');
+        document.getElementById('claim-button').addEventListener('click', async function() {
+            const button = this;
+            const statusDiv = document.getElementById('status');
             
-            const formatCoin = (num) => {
-                try {
-                    return new Intl.NumberFormat('vi-VN').format(num);
-                } catch (e) {
-                    return num;
-                }
-            };
+            // Lấy các tham số từ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('user_id');
+            const amount = urlParams.get('amount');
+            const uuid = urlParams.get('uuid');
+            const apiUrl = urlParams.get('api'); // Lấy API endpoint từ tham số URL
 
-            if (!userId || !amount || !uuid || !botApi) {
-                statusTitle.textContent = "❌ Lỗi Truy Cập";
-                statusTitle.className = 'error';
-                messageEl.textContent = "Thiếu thông tin cần thiết. Vui lòng thử lại bằng cách sử dụng lệnh /getcoin trên Discord.";
-                coinDisplay.textContent = "0 Coin";
+            // Kiểm tra các tham số cần thiết
+            if (!userId || !amount || !uuid || !apiUrl) {
+                statusDiv.className = 'error';
+                statusDiv.textContent = '❌ Lỗi: Thiếu thông tin cần thiết trong URL.';
                 return;
             }
 
-            coinDisplay.textContent = `+${formatCoin(amount)} Coin`;
+            // Xây dựng URL API hoàn chỉnh
+            const fullApiUrl = `${apiUrl}?user_id=${userId}&amount=${amount}&uuid=${uuid}`;
 
-            const claimUrl = `${botApi}?user_id=${userId}&amount=${amount}&uuid=${uuid}`;
+            button.disabled = true;
+            button.textContent = 'Đang xử lý...';
+            statusDiv.textContent = 'Đang gửi yêu cầu đến Bot...';
+            statusDiv.className = '';
 
-            fetch(claimUrl)
-                .then(response => {
-                    return response.text().then(text => ({
-                        ok: response.ok,
-                        status: response.status,
-                        text: text
-                    }));
-                })
-                .then(({ ok, status, text }) => {
-                    if (ok) {
-                        statusTitle.textContent = "✅ Hoàn Thành & Cộng Coin!";
-                        statusTitle.className = 'success';
-                        messageEl.innerHTML = `Bạn đã hoàn thành vượt link thành công! Hệ thống đã cộng **${formatCoin(amount)} Coin** vào tài khoản của bạn. <br><br> **Cảm ơn bạn đã sử dụng Bot!**`;
-                    } else {
-                        statusTitle.textContent = "⚠️ Lỗi Cộng Coin";
-                        statusTitle.className = 'error';
-                        let errorDetail = text || `Mã lỗi HTTP: ${status}`;
-                        messageEl.innerHTML = `Đã xảy ra lỗi khi cố gắng cộng Coin. Có thể yêu cầu đã **hết hạn** hoặc **đã được sử dụng**.\n\nChi tiết lỗi từ Bot: <br> <code>${errorDetail}</code>`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching bot API:', error);
-                    statusTitle.textContent = "❌ Lỗi Kết Nối";
-                    statusTitle.className = 'error';
-                    messageEl.textContent = `Không thể kết nối với máy chủ Bot (${botApi}). Vui lòng liên hệ Admin.`;
-                });
+            try {
+                // Gửi yêu cầu API đến Bot Backend
+                const response = await fetch(fullApiUrl);
+                const responseText = await response.text();
+
+                if (response.ok) {
+                    statusDiv.className = 'success';
+                    statusDiv.textContent = `✅ Thành công: ${responseText}`;
+                    button.textContent = 'Đã Nhận Coin';
+                } else {
+                    statusDiv.className = 'error';
+                    // Hiển thị chi tiết lỗi từ API Bot (nếu có, ví dụ: "Mã yêu cầu không hợp lệ")
+                    statusDiv.textContent = `❌ Lỗi API: ${responseText}`; 
+                    button.disabled = false;
+                    button.textContent = 'Thử lại';
+                }
+            } catch (error) {
+                // Bắt lỗi kết nối (ví dụ: Lỗi Mixed Content, Lỗi mạng)
+                statusDiv.className = 'error';
+                statusDiv.textContent = '⚠️ Lỗi Kết Nối. Kiểm tra Tường lửa/Giao thức HTTP/HTTPS (Mixed Content).';
+                button.disabled = false;
+                button.textContent = 'Thử lại';
+                console.error('Lỗi kết nối API Bot:', error);
+            }
+        });
+
+        // Tự động kiểm tra lỗi khi tải trang (Nếu không có lỗi console, JS vẫn hoạt động)
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.get('user_id') || !urlParams.get('amount') || !urlParams.get('uuid') || !urlParams.get('api')) {
+                document.getElementById('status').textContent = '⚠️ URL thiếu tham số. Không thể nhận Coin.';
+                document.getElementById('status').className = 'error';
+                document.getElementById('claim-button').disabled = true;
+            }
         });
     </script>
 </body>
