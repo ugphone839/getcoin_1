@@ -83,6 +83,14 @@
             margin: 15px 0;
             border-left: 4px solid #4CAF50;
         }
+        .countdown-animation {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -106,7 +114,7 @@
             </ol>
         </div>
         
-        <div class="timer" id="timer">5</div>
+        <div class="timer countdown-animation" id="timer">5</div>
         
         <button class="btn" id="claimBtn" disabled>
             ĐANG ĐẾM NGƯỢC...
@@ -132,6 +140,9 @@
             document.getElementById('serviceName').textContent = getServiceName(serviceType);
             document.getElementById('rewardAmount').textContent = getRewardAmount(serviceType);
             document.getElementById('userId').textContent = userId;
+            
+            // Bắt đầu đếm ngược
+            startCountdown();
         } else {
             // Nếu thiếu tham số, hiển thị thông báo lỗi ngay lập tức
             showMessage('❌ <strong>Thiếu thông tin cần thiết.</strong><br>Vui lòng sử dụng link từ bot Discord bằng lệnh <code>/getcoin</code>.', 'error');
@@ -144,8 +155,7 @@
         const claimBtn = document.getElementById('claimBtn');
         const messageElement = document.getElementById('message');
 
-        // Chỉ bắt đầu đếm ngược nếu có đủ thông tin
-        if (userId && sessionId && serviceType) {
+        function startCountdown() {
             const countdownInterval = setInterval(() => {
                 countdown--;
                 timerElement.textContent = countdown;
@@ -155,6 +165,7 @@
                     claimBtn.disabled = false;
                     claimBtn.textContent = '🎁 NHẬN COIN NGAY';
                     timerElement.style.display = 'none';
+                    timerElement.classList.remove('countdown-animation');
                 }
             }, 1000);
         }
@@ -170,7 +181,10 @@
             showMessage('🔄 Đang xử lý yêu cầu nhận coin...', 'loading');
 
             try {
-                const response = await fetch('http://localhost:3000/api/claim_coin', {
+                // Sử dụng proxy server hoặc direct connection
+                const botServerUrl = await findBotServer();
+                
+                const response = await fetch(`${botServerUrl}/api/claim_coin`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -182,6 +196,10 @@
                         api_key: 'tech_demon_x_omega_2024_secret_key'
                     })
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 const result = await response.json();
 
@@ -195,17 +213,58 @@
                     );
                     claimBtn.textContent = 'ĐÃ NHẬN COIN';
                     claimBtn.style.background = '#2196F3';
+                    
+                    // Tự động chuyển hướng sau 3 giây
+                    setTimeout(() => {
+                        window.close(); // Đóng tab nếu được mở trong tab mới
+                    }, 3000);
                 } else {
                     showMessage(`❌ <strong>Lỗi:</strong> ${result.error}`, 'error');
                     claimBtn.textContent = 'THỬ LẠI';
                     claimBtn.disabled = false;
                 }
             } catch (error) {
-                showMessage(`❌ <strong>Lỗi kết nối:</strong> Không thể kết nối đến bot. Đảm bảo bot đang chạy và thử lại.`, 'error');
+                console.error('Claim coin error:', error);
+                showMessage(
+                    `❌ <strong>Lỗi kết nối:</strong> Không thể kết nối đến bot.<br>
+                    <strong>Nguyên nhân có thể:</strong><br>
+                    • Bot chưa được khởi động<br>
+                    • Lỗi mạng<br>
+                    • Port 3000 bị chặn<br><br>
+                    Vui lòng thông báo cho admin và thử lại sau.`,
+                    'error'
+                );
                 claimBtn.textContent = 'THỬ LẠI';
                 claimBtn.disabled = false;
             }
         });
+
+        // Hàm tìm server bot (thử nhiều endpoint)
+        async function findBotServer() {
+            const endpoints = [
+                'http://localhost:3000',
+                'http://127.0.0.1:3000',
+                `http://${window.location.hostname}:3000`,
+                // Có thể thêm các endpoint khác nếu bot được host online
+            ];
+
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(`${endpoint}/api/health`, {
+                        method: 'GET',
+                        timeout: 5000
+                    });
+                    if (response.ok) {
+                        return endpoint;
+                    }
+                } catch (e) {
+                    console.log(`Endpoint ${endpoint} không khả dụng:`, e.message);
+                }
+            }
+            
+            // Nếu không tìm thấy endpoint nào, trả về localhost mặc định
+            return 'http://localhost:3000';
+        }
 
         function showMessage(message, type) {
             messageElement.innerHTML = message;
@@ -231,6 +290,16 @@
             };
             return rewards[serviceType] || 0;
         }
+
+        // Thêm timeout cho fetch
+        const originalFetch = window.fetch;
+        window.fetch = function(...args) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 giây timeout
+            
+            return originalFetch(...args, { signal: controller.signal })
+                .finally(() => clearTimeout(timeoutId));
+        };
     </script>
 </body>
 </html>
