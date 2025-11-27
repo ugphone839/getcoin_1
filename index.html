@@ -76,16 +76,24 @@
             background: rgba(255, 193, 7, 0.3);
             border: 1px solid #ffc107;
         }
+        .info-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4CAF50;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎯 NHẬN COIN TỪ BOT DISCORD</h1>
         
-        <div id="userInfo" class="instructions" style="display: none;">
-            <p><strong>Thông tin:</strong></p>
+        <div id="userInfo" class="info-box" style="display: none;">
+            <p><strong>Thông tin phiên làm việc:</strong></p>
             <p>Dịch vụ: <span id="serviceName"></span></p>
             <p>Phần thưởng: <span id="rewardAmount"></span> Coin</p>
+            <p>User ID: <span id="userId"></span></p>
         </div>
         
         <div class="instructions">
@@ -94,6 +102,7 @@
                 <li>Chờ đếm ngược 5 giây</li>
                 <li>Nhấn nút "NHẬN COIN" khi đếm ngược kết thúc</li>
                 <li>Coin sẽ được cộng tự động vào tài khoản Discord của bạn</li>
+                <li>Kiểm tra tin nhắn riêng từ bot để xác nhận</li>
             </ol>
         </div>
         
@@ -104,6 +113,10 @@
         </button>
         
         <div id="message"></div>
+
+        <div class="info-box">
+            <p><strong>Lưu ý:</strong> Nếu gặp lỗi kết nối, hãy đảm bảo bot đang hoạt động và thử lại.</p>
+        </div>
     </div>
 
     <script>
@@ -113,11 +126,17 @@
         const sessionId = urlParams.get('session_id');
         const serviceType = urlParams.get('service');
 
-        // Hiển thị thông tin user
-        if (userId && serviceType) {
+        // Hiển thị thông tin user nếu có đủ tham số
+        if (userId && sessionId && serviceType) {
             document.getElementById('userInfo').style.display = 'block';
             document.getElementById('serviceName').textContent = getServiceName(serviceType);
             document.getElementById('rewardAmount').textContent = getRewardAmount(serviceType);
+            document.getElementById('userId').textContent = userId;
+        } else {
+            // Nếu thiếu tham số, hiển thị thông báo lỗi ngay lập tức
+            showMessage('❌ <strong>Thiếu thông tin cần thiết.</strong><br>Vui lòng sử dụng link từ bot Discord bằng lệnh <code>/getcoin</code>.', 'error');
+            document.getElementById('timer').style.display = 'none';
+            document.getElementById('claimBtn').style.display = 'none';
         }
 
         let countdown = 5;
@@ -125,27 +144,30 @@
         const claimBtn = document.getElementById('claimBtn');
         const messageElement = document.getElementById('message');
 
-        const countdownInterval = setInterval(() => {
-            countdown--;
-            timerElement.textContent = countdown;
-            
-            if (countdown <= 0) {
-                clearInterval(countdownInterval);
-                claimBtn.disabled = false;
-                claimBtn.textContent = '🎁 NHẬN COIN NGAY';
-                timerElement.style.display = 'none';
-            }
-        }, 1000);
+        // Chỉ bắt đầu đếm ngược nếu có đủ thông tin
+        if (userId && sessionId && serviceType) {
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                timerElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    claimBtn.disabled = false;
+                    claimBtn.textContent = '🎁 NHẬN COIN NGAY';
+                    timerElement.style.display = 'none';
+                }
+            }, 1000);
+        }
 
         claimBtn.addEventListener('click', async function() {
             if (!userId || !sessionId || !serviceType) {
-                showMessage('Thiếu thông tin cần thiết. Vui lòng sử dụng link từ bot Discord.', 'error');
+                showMessage('❌ <strong>Thiếu thông tin cần thiết.</strong><br>Vui lòng sử dụng link từ bot Discord.', 'error');
                 return;
             }
 
             claimBtn.disabled = true;
             claimBtn.textContent = 'ĐANG XỬ LÝ...';
-            showMessage('Đang xử lý yêu cầu nhận coin...', 'loading');
+            showMessage('🔄 Đang xử lý yêu cầu nhận coin...', 'loading');
 
             try {
                 const response = await fetch('http://localhost:3000/api/claim_coin', {
@@ -172,13 +194,14 @@
                         'success'
                     );
                     claimBtn.textContent = 'ĐÃ NHẬN COIN';
+                    claimBtn.style.background = '#2196F3';
                 } else {
                     showMessage(`❌ <strong>Lỗi:</strong> ${result.error}`, 'error');
                     claimBtn.textContent = 'THỬ LẠI';
                     claimBtn.disabled = false;
                 }
             } catch (error) {
-                showMessage(`❌ <strong>Lỗi kết nối:</strong> Không thể kết nối đến bot`, 'error');
+                showMessage(`❌ <strong>Lỗi kết nối:</strong> Không thể kết nối đến bot. Đảm bảo bot đang chạy và thử lại.`, 'error');
                 claimBtn.textContent = 'THỬ LẠI';
                 claimBtn.disabled = false;
             }
