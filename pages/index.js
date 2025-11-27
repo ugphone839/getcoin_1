@@ -8,8 +8,7 @@ export default function Home() {
     const [status, setStatus] = useState('Đang chờ Key từ URL...');
 
     useEffect(() => {
-        // KIỂM TRA MÔI TRƯỜNG ĐỂ TRÁNH LỖI SSR
-        // Code này chỉ chạy trên trình duyệt (client-side)
+        // KIỂM TRA MÔI TRƯỜNG ĐỂ CHỈ CHẠY CODE TRÊN TRÌNH DUYỆT
         if (typeof window !== 'undefined') { 
             // Lấy Key từ URL: /?key=RANDOMCODE
             const params = new URLSearchParams(window.location.search);
