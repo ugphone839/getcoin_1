@@ -1,13 +1,12 @@
 function generateUUID() {
-  // Tạo một chuỗi Key ngẫu nhiên có định dạng 4-4-4-4
+  // Thay đổi tiền tố theo yêu cầu: Key-
   const pattern = 'xxxx-xxxx-xxxx-xxxx';
   const key = pattern.replace(/[x]/g, (c) => {
-    // Tạo giá trị hex ngẫu nhiên
     const r = (Math.random() * 16) | 0;
     return r.toString(16);
   }).toUpperCase();
-  // Thêm tiền tố để bot dễ dàng nhận dạng và xử lý hơn
-  return `GETCOIN-${key}`; 
+  // Key mới: Key-XXXX-XXXX-XXXX-XXXX
+  return `Key-${key}`; 
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -31,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       setTimeout(() => {
         copyButton.textContent = originalText;
-        copyButton.style.backgroundColor = originalColor; 
+        copyButton.style.backgroundColor = '#007bff'; // Trở lại màu xanh dương (Nếu bạn dùng style.css cũ)
       }, 2000);
 
     }).catch(err => {
