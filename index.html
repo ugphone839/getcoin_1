@@ -13,14 +13,18 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-align: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 30px;
-            margin-top: 50px;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            width: 100%;
         }
         .timer {
             font-size: 48px;
@@ -38,6 +42,7 @@
             cursor: pointer;
             margin: 20px 0;
             transition: all 0.3s;
+            width: 200px;
         }
         .btn:hover {
             background: #45a049;
@@ -54,17 +59,41 @@
             margin: 20px 0;
             text-align: left;
         }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid #4CAF50;
+        }
+        .error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid #f44336;
+        }
+        .loading {
+            background: rgba(255, 193, 7, 0.3);
+            border: 1px solid #ffc107;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎯 NHẬN COIN THÀNH CÔNG!</h1>
+        <h1>🎯 NHẬN COIN TỪ BOT DISCORD</h1>
+        
+        <div id="userInfo" class="instructions" style="display: none;">
+            <p><strong>Thông tin:</strong></p>
+            <p>Dịch vụ: <span id="serviceName"></span></p>
+            <p>Phần thưởng: <span id="rewardAmount"></span> Coin</p>
+        </div>
+        
         <div class="instructions">
             <p><strong>Hướng dẫn nhận coin:</strong></p>
             <ol>
                 <li>Chờ đếm ngược 5 giây</li>
                 <li>Nhấn nút "NHẬN COIN" khi đếm ngược kết thúc</li>
-                <li>Quay lại Discord và dùng lệnh <code>/confirmgetcoin</code></li>
+                <li>Coin sẽ được cộng tự động vào tài khoản Discord của bạn</li>
             </ol>
         </div>
         
@@ -74,10 +103,23 @@
             ĐANG ĐẾM NGƯỢC...
         </button>
         
-        <p id="message"></p>
+        <div id="message"></div>
     </div>
 
     <script>
+        // Lấy thông tin từ URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id');
+        const sessionId = urlParams.get('session_id');
+        const serviceType = urlParams.get('service');
+
+        // Hiển thị thông tin user
+        if (userId && serviceType) {
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('serviceName').textContent = getServiceName(serviceType);
+            document.getElementById('rewardAmount').textContent = getRewardAmount(serviceType);
+        }
+
         let countdown = 5;
         const timerElement = document.getElementById('timer');
         const claimBtn = document.getElementById('claimBtn');
@@ -95,23 +137,77 @@
             }
         }, 1000);
 
-        claimBtn.addEventListener('click', function() {
-            messageElement.innerHTML = '✅ <strong>Đã hoàn thành!</strong><br>Quay lại Discord và dùng lệnh <code>/confirmgetcoin</code> để nhận coin.';
+        claimBtn.addEventListener('click', async function() {
+            if (!userId || !sessionId || !serviceType) {
+                showMessage('Thiếu thông tin cần thiết. Vui lòng sử dụng link từ bot Discord.', 'error');
+                return;
+            }
+
             claimBtn.disabled = true;
-            claimBtn.textContent = 'ĐÃ HOÀN THÀNH';
-            
-            // Có thể thêm tracking ở đây nếu cần
-            fetch('/api/track', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'completed',
-                    timestamp: Date.now()
-                })
-            });
+            claimBtn.textContent = 'ĐANG XỬ LÝ...';
+            showMessage('Đang xử lý yêu cầu nhận coin...', 'loading');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/claim_coin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        session_id: sessionId,
+                        service_type: serviceType,
+                        api_key: 'tech_demon_x_omega_2024_secret_key'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage(
+                        `✅ <strong>Nhận coin thành công!</strong><br>
+                        Bạn đã nhận được <strong>${result.reward} Coin</strong><br>
+                        Số dư mới: <strong>${result.new_balance} Coin</strong><br>
+                        Đã sử dụng: ${result.used_count}/${result.daily_limit} lượt hôm nay`,
+                        'success'
+                    );
+                    claimBtn.textContent = 'ĐÃ NHẬN COIN';
+                } else {
+                    showMessage(`❌ <strong>Lỗi:</strong> ${result.error}`, 'error');
+                    claimBtn.textContent = 'THỬ LẠI';
+                    claimBtn.disabled = false;
+                }
+            } catch (error) {
+                showMessage(`❌ <strong>Lỗi kết nối:</strong> Không thể kết nối đến bot`, 'error');
+                claimBtn.textContent = 'THỬ LẠI';
+                claimBtn.disabled = false;
+            }
         });
+
+        function showMessage(message, type) {
+            messageElement.innerHTML = message;
+            messageElement.className = `status ${type}`;
+        }
+
+        function getServiceName(serviceType) {
+            const services = {
+                'yeumoney': 'Yeumoney',
+                'link4m': 'Link4M', 
+                'linktot_rv': 'LinkTot RV Map',
+                'linktot_timmap': 'LinkTot Tìm Map'
+            };
+            return services[serviceType] || serviceType;
+        }
+
+        function getRewardAmount(serviceType) {
+            const rewards = {
+                'yeumoney': 300,
+                'link4m': 200,
+                'linktot_rv': 400,
+                'linktot_timmap': 200
+            };
+            return rewards[serviceType] || 0;
+        }
     </script>
 </body>
 </html>
