@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhận Thưởng Coin - Hoàn Tất Vượt Link</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            color: #28a745;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #6c757d;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+        }
+        .claim-info {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .claim-info strong {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        .claim-id {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #007bff;
+            word-break: break-all;
+            margin-bottom: 15px;
+        }
+        .discord-link {
+            text-decoration: none;
+            background-color: #5865f2;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .discord-link:hover {
+            background-color: #4752c4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Hoàn Tất Vượt Link!</h1>
+        <p>Bạn đã hoàn thành bước vượt link thành công. Vui lòng quay lại Discord và sử dụng lệnh nhận thưởng sau:</p>
+        
+        <div class="claim-info">
+            <strong>MÃ NHẬN THƯỞNG CỦA BẠN (CLAIM ID)</strong>
+            <div class="claim-id" id="claim-id-display">Đang tải...</div>
+            
+            <strong>LỆNH CẦN DÙNG TRÊN DISCORD</strong>
+            <div class="claim-id" id="claim-command-display">/claimcoin [MÃ Ở TRÊN]</div>
+        </div>
+        
+        <a href="https://discord.com/" target="_blank" class="discord-link">Quay lại Discord</a>
+
+        <p style="margin-top: 20px; font-size: 0.9em; color: #dc3545;">Lưu ý: Mọi giao dịch gian lận sẽ bị cấm vĩnh viễn.</p>
+    </div>
+
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        };
+
+        window.onload = function() {
+            var claimId = getUrlParameter('claim_id');
+            var linkType = getUrlParameter('type');
+            
+            if (claimId) {
+                document.getElementById('claim-id-display').textContent = claimId.toUpperCase();
+                document.getElementById('claim-command-display').textContent = `/claimcoin ${claimId.toUpperCase()}`;
+            } else {
+                 document.getElementById('claim-id-display').textContent = 'LỖI: Không tìm thấy Claim ID.';
+                 document.getElementById('claim-command-display').textContent = '/claimcoin [MÃ LỖI]';
+            }
+
+            // Ghi log loại link nếu cần thiết cho mục đích debug/theo dõi
+            console.log("Link Type Completed:", linkType);
+        };
+    </script>
+</body>
+</html>
