@@ -3,88 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác Thực Key - Nhận Coin Discord</title>
+    <title>Get Coin Success</title>
     <style>
-        body {
-            font-family: sans-serif;
-            background-color: #36393f; /* Màu nền giống Discord */
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-        }
-        .container {
-            background-color: #2f3136; /* Màu hộp nội dung */
-            padding: 30px 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-            max-width: 90%;
-            width: 500px;
-        }
-        h1 {
-            color: #7289da; /* Màu xanh Discord */
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.1em;
-            margin-bottom: 30px;
-        }
-        #keyDisplay {
-            background-color: #202225;
-            color: #43b581; /* Màu xanh lá cây - Thành công */
-            padding: 15px;
-            border-radius: 5px;
-            font-size: 1.5em;
-            font-weight: bold;
-            user-select: all; /* Cho phép chọn toàn bộ Key dễ dàng */
-            cursor: pointer;
-            margin-bottom: 20px;
-            border: 2px dashed #43b581;
-        }
-        .instructions {
-            font-size: 0.9em;
-            color: #b9bbbe;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #2c2f33; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { background-color: #23272a; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); text-align: center; max-width: 90%; width: 400px; }
+        h1 { color: #7289da; margin-bottom: 20px; }
+        .key-box { background: #000; padding: 15px; border: 2px dashed #7289da; color: #00ff00; font-family: monospace; font-size: 1.2em; margin: 20px 0; word-break: break-all; }
+        button { background-color: #7289da; color: white; border: none; padding: 10px 20px; font-size: 1em; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        button:hover { background-color: #5b6eae; }
+        .error { color: #ff5555; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>✅ Xác Thực Thành Công!</h1>
-        <p>Vui lòng **copy Key** dưới đây và **nhập nó vào kênh Discord** bằng lệnh `/getcoin <key>` để nhận Coin.</p>
-        
-        <div id="keyDisplay">Đang tải Key...</div>
 
-        <p class="instructions">Key này chỉ có hiệu lực trong **{{SESSION_KEY_TIMEOUT_MINUTES}}** phút kể từ khi bạn bấm vào nút trên Discord.</p>
-        <button onclick="copyKey()" style="background-color: #7289da; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Copy Key</button>
+    <div class="container">
+        <h1>🎉 Hoàn Thành!</h1>
+        <p>Cảm ơn bạn đã vượt link. Dưới đây là Key của bạn:</p>
+        
+        <div id="key-display" class="key-box">Đang lấy Key...</div>
+        
+        <button id="copy-btn" onclick="copyKey()">Copy Key</button>
+        <p style="font-size: 0.8em; color: #99aab5; margin-top: 20px;">Quay lại Discord và nhập: <br><code>.getcoin [KEY]</code> hoặc <code>/getcoin [KEY]</code></p>
     </div>
 
     <script>
+        // Logic mới: Lấy key từ URL (?key=...) thay vì tự tạo
         document.addEventListener('DOMContentLoaded', () => {
-            // Lấy tham số 'key' từ URL
             const urlParams = new URLSearchParams(window.location.search);
             const key = urlParams.get('key');
-            const keyDisplay = document.getElementById('keyDisplay');
-
+            const display = document.getElementById('key-display');
+            
             if (key) {
-                keyDisplay.textContent = key;
-                keyDisplay.setAttribute('data-key', key);
+                display.innerText = key;
             } else {
-                keyDisplay.textContent = '❌ LỖI: Không tìm thấy Key Phiên.';
-                keyDisplay.style.color = '#f04747';
-                keyDisplay.style.borderColor = '#f04747';
+                display.innerText = "LỖI: Không tìm thấy Key trên URL!";
+                display.classList.add("error");
+                document.getElementById('copy-btn').style.display = 'none';
             }
         });
 
         function copyKey() {
-            const keyText = document.getElementById('keyDisplay').textContent;
+            const keyText = document.getElementById('key-display').innerText;
             navigator.clipboard.writeText(keyText).then(() => {
-                alert('Đã copy Key thành công! Quay lại Discord và sử dụng lệnh /getcoin');
+                const btn = document.getElementById('copy-btn');
+                btn.innerText = "Đã Copy!";
+                setTimeout(() => btn.innerText = "Copy Key", 2000);
             }).catch(err => {
-                console.error('Không thể copy Key: ', err);
-                alert('Lỗi: Vui lòng tự copy Key thủ công.');
+                alert("Lỗi copy, hãy copy thủ công!");
             });
         }
     </script>
