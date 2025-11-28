@@ -3,55 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Coin Success</title>
+    <title>Hoàn Thành Vượt Link - Nhận Key</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #2c2f33; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { background-color: #23272a; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); text-align: center; max-width: 90%; width: 400px; }
-        h1 { color: #7289da; margin-bottom: 20px; }
-        .key-box { background: #000; padding: 15px; border: 2px dashed #7289da; color: #00ff00; font-family: monospace; font-size: 1.2em; margin: 20px 0; word-break: break-all; }
-        button { background-color: #7289da; color: white; border: none; padding: 10px 20px; font-size: 1em; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        button:hover { background-color: #5b6eae; }
-        .error { color: #ff5555; }
+        /* Điều chỉnh kích thước và ngắt dòng cho Key */
+        .key-box {
+            font-size: 1.5rem;
+            word-break: break-all;
+        }
     </style>
 </head>
-<body>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
 
-    <div class="container">
-        <h1>🎉 Hoàn Thành!</h1>
-        <p>Cảm ơn bạn đã vượt link. Dưới đây là Key của bạn:</p>
+    <div class="bg-gray-800 p-8 md:p-12 rounded-xl shadow-2xl w-full max-w-lg text-center">
+        <svg class="w-16 h-16 mx-auto text-green-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-green-400 mb-4">Hoàn Thành!</h1>
         
-        <div id="key-display" class="key-box">Đang lấy Key...</div>
+        <p class="text-gray-300 mb-8 text-lg">Cảm ơn bạn đã vượt link để ủng hộ bot! Vui lòng copy **Key** bên dưới và gửi lại cho bot bằng lệnh `/getcoin <key>` hoặc `.getcoin <key>` để nhận Coin.</p>
         
-        <button id="copy-btn" onclick="copyKey()">Copy Key</button>
-        <p style="font-size: 0.8em; color: #99aab5; margin-top: 20px;">Quay lại Discord và nhập: <br><code>.getcoin [KEY]</code> hoặc <code>/getcoin [KEY]</code></p>
+        <div class="bg-gray-700 p-4 rounded-lg mb-6 border-2 border-dashed border-green-500">
+            <p class="text-sm font-semibold text-gray-400 mb-2 uppercase">Key Của Bạn</p>
+            <div id="key-display" class="key-box text-yellow-300 font-mono select-text">Đang tải Key...</div>
+        </div>
+
+        <button id="copy-button" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v2"></path></svg>
+            Copy Key
+        </button>
+        <p id="copy-message" class="mt-4 text-sm text-green-400 opacity-0 transition-opacity duration-300">Đã sao chép!</p>
     </div>
 
     <script>
-        // Logic mới: Lấy key từ URL (?key=...) thay vì tự tạo
         document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const key = urlParams.get('key');
-            const display = document.getElementById('key-display');
+            const keyDisplay = document.getElementById('key-display');
+            const copyButton = document.getElementById('copy-button');
+            const copyMessage = document.getElementById('copy-message');
+
+            // Hàm lấy giá trị từ URL Parameter
+            function getUrlParameter(name) {
+                // Thoát các ký tự đặc biệt trong tên tham số
+                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                const results = regex.exec(location.search);
+                // Trả về chuỗi rỗng nếu không tìm thấy
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+
+            const key = getUrlParameter('key');
             
             if (key) {
-                display.innerText = key;
+                keyDisplay.textContent = key;
+                copyButton.addEventListener('click', () => {
+                    // Sao chép key vào clipboard
+                    navigator.clipboard.writeText(key).then(() => {
+                        // Hiển thị thông báo sao chép thành công
+                        copyMessage.textContent = 'Đã sao chép Key thành công!';
+                        copyMessage.classList.remove('opacity-0');
+                        copyMessage.classList.add('opacity-100');
+                        setTimeout(() => {
+                            copyMessage.classList.remove('opacity-100');
+                            copyMessage.classList.add('opacity-0');
+                        }, 3000);
+                        
+                        // Thay đổi trạng thái nút
+                        copyButton.textContent = 'Đã Copy!';
+                        copyButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                        copyButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                        setTimeout(() => {
+                            copyButton.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v2"></path></svg> Copy Key';
+                            copyButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                            copyButton.classList.add('bg-green-600', 'hover:bg-green-700');
+                        }, 2000);
+
+                    }).catch(err => {
+                        console.error('Không thể sao chép key: ', err);
+                        alert('Không thể tự động sao chép. Vui lòng copy thủ công Key: ' + key);
+                    });
+                });
             } else {
-                display.innerText = "LỖI: Không tìm thấy Key trên URL!";
-                display.classList.add("error");
-                document.getElementById('copy-btn').style.display = 'none';
+                // Xử lý trường hợp không có key
+                keyDisplay.textContent = 'LỖI: Không tìm thấy Key trong URL. Vui lòng thử lại lệnh Get Coin trên Discord.';
+                copyButton.disabled = true;
+                copyButton.classList.add('opacity-50', 'cursor-not-allowed');
             }
         });
-
-        function copyKey() {
-            const keyText = document.getElementById('key-display').innerText;
-            navigator.clipboard.writeText(keyText).then(() => {
-                const btn = document.getElementById('copy-btn');
-                btn.innerText = "Đã Copy!";
-                setTimeout(() => btn.innerText = "Copy Key", 2000);
-            }).catch(err => {
-                alert("Lỗi copy, hãy copy thủ công!");
-            });
-        }
     </script>
 </body>
 </html>
