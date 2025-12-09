@@ -1,30 +1,455 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác nhận nhận Coin</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>🔑 Xin Cảm Ơn, Khách Hàng! 🎁</h1>
-        <p>Bạn đã vượt qua liên kết thành công. Cảm ơn bạn đã ủng hộ bot.</p>
-        <p>Vui lòng **SAO CHÉP MÃ XÁC NHẬN (KEY)** bên dưới và quay lại Discord để dùng lệnh `.getcoin <key>` để nhận Coin.</p>
-        
-        <div id="key-container">
-            <span id="validation-key">Đang tải Key...</span>
-        </div>
-        
-        <button id="copy-button" onclick="copyKey()">
-            <span class="icon">📋</span> Sao Chép Key
-        </button>
-        
-        <p class="warning-message">
-            ⚠️ **LƯU Ý QUAN TRỌNG:** Mỗi Key chỉ sử dụng được **DUY NHẤT một lần**. Key sẽ hết hạn sau 15 phút.
-        </p>
-    </div>
+  <meta charset="UTF-8" />
+  <title>Xác Nhận Nhận Coin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Font & basic reset -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-    <script src="script.js"></script>
+  <style>
+    :root {
+      --bg: #050816;
+      --card-bg: rgba(15, 23, 42, 0.96);
+      --accent: #6366f1;
+      --accent-soft: rgba(99, 102, 241, 0.1);
+      --accent-strong: rgba(129, 140, 248, 0.35);
+      --success: #22c55e;
+      --danger: #f97316;
+      --border-subtle: rgba(148, 163, 184, 0.4);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --radius-xl: 22px;
+      --shadow-soft: 0 20px 50px rgba(15, 23, 42, 0.9);
+      --transition-fast: 160ms ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(129, 140, 248, 0.35), transparent 55%),
+        var(--bg);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .card {
+      position: relative;
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 22px 18px 18px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      overflow: hidden;
+    }
+
+    /* Glow border bên trái */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset-y: 16px;
+      left: 0;
+      width: 3px;
+      border-radius: 999px;
+      background: linear-gradient(to bottom, #22c55e, #22c55e, #22c55e);
+      opacity: 0.9;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.3);
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .highlight {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, var(--accent-soft), transparent 60%);
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 10px 12px 12px;
+      margin-bottom: 14px;
+    }
+
+    .panel-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      margin-bottom: 4px;
+    }
+
+    .key-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .key-chip {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 10px 12px;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+        Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      color: #e5e7eb;
+      overflow-wrap: anywhere;
+      position: relative;
+    }
+
+    .key-chip.loading {
+      color: var(--text-muted);
+    }
+
+    .key-chip.loading::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(
+        110deg,
+        transparent 0%,
+        rgba(148, 163, 184, 0.3) 35%,
+        transparent 70%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -120% 0;
+      }
+      100% {
+        background-position: 120% 0;
+      }
+    }
+
+    .btn-copy {
+      flex-shrink: 0;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), opacity var(--transition-fast);
+      box-shadow: 0 8px 22px rgba(79, 70, 229, 0.58);
+    }
+
+    .btn-copy:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.6);
+    }
+
+    .btn-copy[disabled] {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn-copy-icon {
+      font-size: 14px;
+    }
+
+    .note {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .note-pill {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .warning {
+      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      background: rgba(24, 24, 27, 0.95);
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px dashed rgba(249, 115, 22, 0.5);
+      color: #fed7aa;
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+    }
+
+    .warning-icon {
+      font-size: 18px;
+      line-height: 1;
+      margin-top: 1px;
+    }
+
+    .warning strong {
+      color: #fed7aa;
+      font-weight: 600;
+    }
+
+    .footer {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .footer span {
+      opacity: 0.9;
+    }
+
+    .brand-pill {
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .brand-pill strong {
+      color: #facc15;
+      font-weight: 600;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(40px);
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      color: #bbf7d0;
+      border: 1px solid rgba(34, 197, 94, 0.6);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease-out, transform 180ms ease-out;
+      z-index: 50;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    .toast-icon {
+      font-size: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .card {
+        padding: 26px 22px 20px;
+      }
+      .title {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="card">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        XÁC NHẬN NHẬN COIN
+      </div>
+
+      <h1 class="title">Xin cảm ơn, khách hàng! 🎉</h1>
+      <p class="subtitle">
+        Bạn đã vượt qua liên kết thành công. Cảm ơn bạn đã ủng hộ
+        <span class="highlight">Robuxreward Bot</span>.
+        <br />
+        Vui lòng <span class="highlight">sao chép mã xác nhận (Key)</span> bên dưới
+        và quay lại Discord dùng lệnh <code>.getcoin</code> để nhận Coin.
+      </p>
+
+      <div class="panel">
+        <div class="panel-label">Mã xác nhận</div>
+        <div class="key-row">
+          <div id="key-chip" class="key-chip loading">
+            <span id="key-text">Đang tải Key...</span>
+          </div>
+          <button id="copy-btn" class="btn-copy" disabled>
+            <span class="btn-copy-icon">📋</span>
+            <span>Sao chép</span>
+          </button>
+        </div>
+        <div class="note">
+          <span class="note-pill">Hướng dẫn</span>
+          <span>Dán key vào lệnh <code>.getcoin &lt;key&gt;</code> trong Discord.</span>
+        </div>
+      </div>
+
+      <div class="warning">
+        <span class="warning-icon">⚠️</span>
+        <div>
+          <strong>Lưu ý quan trọng:</strong><br />
+          Mỗi Key chỉ sử dụng được <strong>duy nhất một lần</strong> và sẽ hết hạn sau
+          <strong>15 phút</strong>. Không chia sẻ Key này cho người khác.
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Made for your safety ✨</span>
+        <span class="brand-pill">
+          BOT <strong>ROBUXREWARD</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <span class="toast-icon">✅</span>
+    <span id="toast-text">Đã sao chép Key vào bộ nhớ tạm!</span>
+  </div>
+
+  <script>
+    /**
+     * HÀM LẤY KEY
+     * Bạn có thể chỉnh lại logic lấy key cho khớp backend hiện tại.
+     * Ở đây:
+     *  - Ưu tiên query ?key=... hoặc ?k=...
+     *  - Nếu không có, dùng window.GETCOIN_KEY nếu bạn set từ script khác
+     */
+    function getKeyFromSource() {
+      const url = new URL(window.location.href);
+      const qKey = url.searchParams.get("key") || url.searchParams.get("k");
+      if (qKey) return qKey;
+
+      if (window.GETCOIN_KEY && typeof window.GETCOIN_KEY === "string") {
+        return window.GETCOIN_KEY;
+      }
+
+      // Fallback: nếu backend của bạn render sẵn trực tiếp thì có thể sửa đoạn này
+      return null;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const textEl = document.getElementById("toast-text");
+      if (!toast) return;
+      if (message) textEl.textContent = message;
+
+      toast.classList.add("visible");
+      setTimeout(() => {
+        toast.classList.remove("visible");
+      }, 2100);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const keyEl = document.getElementById("key-text");
+      const chipEl = document.getElementById("key-chip");
+      const btn = document.getElementById("copy-btn");
+
+      const key = getKeyFromSource();
+
+      if (key) {
+        keyEl.textContent = key;
+        chipEl.classList.remove("loading");
+        btn.disabled = false;
+      } else {
+        keyEl.textContent = "Không thể tải Key. Vui lòng thử lại từ Discord.";
+        chipEl.classList.remove("loading");
+        chipEl.style.borderColor = "rgba(248, 113, 113, 0.7)";
+        btn.disabled = true;
+      }
+
+      btn.addEventListener("click", async () => {
+        if (!key) return;
+        try {
+          await navigator.clipboard.writeText(key);
+          showToast("Đã sao chép Key vào bộ nhớ tạm!");
+        } catch (err) {
+          console.error(err);
+          showToast("Không sao chép được, hãy copy thủ công.");
+        }
+      });
+    });
+  </script>
 </body>
 </html>
