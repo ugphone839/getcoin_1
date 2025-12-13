@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Robux Reward</title>
     <style>
         * {
@@ -10,19 +10,23 @@
             padding: 0;
             box-sizing: border-box;
         }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Thay đổi link hình nền ở đây */
             background: url('https://images.unsplash.com/photo-1558618047-3c8c76ca335b?w=1920&h=1080&fit=crop&auto=format') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
+            min-height: 100dvh; /* Dynamic viewport height cho mobile */
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            padding: 15px;
             position: relative;
         }
-        /* Overlay tối để chữ dễ đọc */
         body::before {
             content: '';
             position: fixed;
@@ -33,24 +37,256 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
-        /* Hiệu ứng particles */
-        body::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background-image: 
-                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px),
-                radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 50px 50px, 30px 30px;
-            background-position: 0 0, 25px 25px;
-            animation: float 20s linear infinite;
-            z-index: -1;
-            opacity: 0.3;
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px 20px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            position: relative;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: slideUp 0.8s ease-out;
+            max-height: 95vh;
+            max-height: 95dvh;
+            overflow-y: auto;
         }
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform:
-\<Streaming stoppped because the conversation grew too long for this model\>
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #00D4FF 0%, #0099CC 50%, #FF6B6B 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        h1 {
+            color: #1a1a2e;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+        .subtitle {
+            color: #4a5568;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .key-container {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
+            border-radius: 15px;
+            padding: 18px 15px;
+            margin: 15px 0;
+            border: 2px solid #4ECDC4;
+            transition: all 0.3s ease;
+        }
+        .key-label {
+            color: #2d3748;
+            font-size: 12px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        .key-display {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 800;
+            color: #1a202c;
+            letter-spacing: 2px;
+            word-break: break-all;
+            user-select: all;
+            background: rgba(255,255,255,0.5);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .copy-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            max-width: 280px;
+        }
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+        .copy-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .instruction {
+            background: rgba(255, 255, 255, 0.8);
+            border-left: 4px solid #4ECDC4;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            color: #2d3748;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .instruction h3 {
+            color: #1a202c;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        .instruction ol {
+            margin-left: 20px;
+            padding-left: 0;
+        }
+        .instruction li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 20px;
+            color: #718096;
+            font-size: 11px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        .footer a {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">R$</div>
+            <h1>Robux Reward</h1>
+            <p class="subtitle">Key của bạn đã sẵn sàng! 🎁</p>
+        </div>
+        <div class="key-container">
+            <div class="key-label">🔐 Key:</div>
+            <div class="key-display" id="keyDisplay">
+                <span class="loading"></span> Đang tải...
+            </div>
+        </div>
+        <button class="copy-btn" id="copyBtn" onclick="copyKey()">📋 Sao chép</button>
+        <div class="copy-success" id="copySuccess">✅ Đã sao chép!</div>
+        <div class="instruction">
+            <h3>📖 Hướng dẫn:</h3>
+            <ol>
+                <li>Nhấn "Sao chép" để copy key</li>
+                <li>Quay lại Discord</li>
+                <li>Dùng lệnh <strong>/getcoin &lt;key&gt;</strong></li>
+            </ol>
+        </div>
+        <div class="footer">
+            <p>🤖 <a href="https://discord.com/users/1438073384805072998">@RobuxRewardBot</a> | 
+            📞 <a href="https://discord.gg/kJskg6G2hz">Support</a></p>
+        </div>
+    </div>
+    <script>
+        function getKeyFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('key') || 'KEY_NOT_FOUND';
+        }
+        function displayKey() {
+            const key = getKeyFromURL();
+            const keyDisplay = document.getElementById('keyDisplay');
+            if (key && key !== 'KEY_NOT_FOUND' && key.length > 5) {
+                keyDisplay.textContent = key;
+            } else {
+                keyDisplay.innerHTML = '<span style="color: #e53e3e;">❌ Key không hợp lệ</span>';
+                document.getElementById('copyBtn').style.display = 'none';
+            }
+        }
+        async function copyKey() {
+            const key = getKeyFromURL();
+            try {
+                await navigator.clipboard.writeText(key);
+                showCopySuccess();
+            } catch (err) {
+                const textArea = document.createElement('textarea');
+                textArea.value = key;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopySuccess();
+            }
+        }
+        function showCopySuccess() {
+            const copyBtn = document.getElementById('copyBtn');
+            const copySuccess = document.getElementById('copySuccess');
+            copySuccess.style.display = 'block';
+            copyBtn.innerHTML = '🚀 Quay lại Bot!';
+            copyBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+            setTimeout(() => {
+                copySuccess.style.display = 'none';
+                copyBtn.innerHTML = '📋 Sao chép';
+                copyBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }, 3000);
+        }
+        document.addEventListener('DOMContentLoaded', displayKey);
+    </script>
+</body>
+</html>
