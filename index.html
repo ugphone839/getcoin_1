@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Robux Reward</title>
+    <title>Robux Reward - Get Key</title>
+    <link rel="icon" href="https://i.imgur.com/YourIcon.png" type="image/png">
     <style>
         * {
             margin: 0;
@@ -17,10 +18,9 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('https://images.unsplash.com/photo-1558618047-3c8c76ca335b?w=1920&h=1080&fit=crop&auto=format') no-repeat center center fixed;
-            background-size: cover;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
-            min-height: 100dvh; /* Dynamic viewport height cho mobile */
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -34,21 +34,25 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 107, 107, 0.1) 0%, transparent 40%);
+            z-index: 0;
         }
         .container {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 25px 20px;
-            max-width: 420px;
+            border-radius: 24px;
+            padding: 30px 25px;
+            max-width: 400px;
             width: 100%;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                0 0 100px rgba(0, 212, 255, 0.2);
             text-align: center;
             position: relative;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            animation: slideUp 0.8s ease-out;
+            z-index: 1;
+            animation: slideUp 0.6s ease-out;
             max-height: 95vh;
             max-height: 95dvh;
             overflow-y: auto;
@@ -56,84 +60,127 @@
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
-        .header {
-            margin-bottom: 20px;
-        }
         .logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
             background: linear-gradient(135deg, #00D4FF 0%, #0099CC 50%, #FF6B6B 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 42px;
             color: white;
             font-weight: bold;
-            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
             animation: pulse 2s infinite;
         }
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(0, 212, 255, 0.6); }
         }
         h1 {
             color: #1a1a2e;
-            font-size: 24px;
+            font-size: 26px;
             margin-bottom: 8px;
             font-weight: 800;
         }
         .subtitle {
             color: #4a5568;
             font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
             margin-bottom: 20px;
-            font-weight: 500;
+            animation: fadeIn 0.5s ease;
+        }
+        .status-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 1px solid #28a745;
+        }
+        .status-error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 1px solid #dc3545;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
         .key-container {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
-            border-radius: 15px;
-            padding: 18px 15px;
-            margin: 15px 0;
-            border: 2px solid #4ECDC4;
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            padding: 20px 15px;
+            margin: 20px 0;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        .key-container::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(135deg, #00D4FF, #8A2BE2, #FF6B6B);
+            border-radius: 18px;
+            z-index: -1;
         }
         .key-label {
-            color: #2d3748;
-            font-size: 12px;
-            margin-bottom: 10px;
+            color: #495057;
+            font-size: 11px;
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-weight: 600;
+            font-weight: 700;
         }
         .key-display {
-            font-family: 'Courier New', monospace;
-            font-size: 18px;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 20px;
             font-weight: 800;
             color: #1a202c;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             word-break: break-all;
             user-select: all;
-            background: rgba(255,255,255,0.5);
-            padding: 10px;
-            border-radius: 8px;
+            background: white;
+            padding: 12px 15px;
+            border-radius: 10px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #dee2e6;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .key-display:hover {
+            background: #f8f9fa;
+            border-color: #00D4FF;
+        }
+        .key-display.error {
+            color: #dc3545;
+            font-size: 14px;
+            letter-spacing: 0;
         }
         .copy-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 14px 35px;
+            padding: 16px 40px;
             border-radius: 50px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
             margin-top: 20px;
             transition: all 0.3s ease;
@@ -142,151 +189,289 @@
             letter-spacing: 1px;
             width: 100%;
             max-width: 280px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
         }
         .copy-btn:active {
             transform: scale(0.98);
         }
-        .copy-success {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 12px;
-            color: white;
-            font-weight: bold;
-            display: none;
-            animation: slideIn 0.4s ease;
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         }
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .copy-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
         .instruction {
-            background: rgba(255, 255, 255, 0.8);
-            border-left: 4px solid #4ECDC4;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-left: 4px solid #2196f3;
+            padding: 18px 15px;
+            border-radius: 12px;
+            margin-top: 25px;
             text-align: left;
-            color: #2d3748;
             font-size: 13px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
         .instruction h3 {
-            color: #1a202c;
+            color: #1565c0;
             margin-bottom: 12px;
-            font-size: 15px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .instruction ol {
-            margin-left: 20px;
-            padding-left: 0;
+            margin-left: 18px;
+            color: #37474f;
         }
         .instruction li {
             margin-bottom: 8px;
         }
+        .instruction code {
+            background: rgba(0,0,0,0.1);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
         .footer {
-            margin-top: 20px;
-            color: #718096;
-            font-size: 11px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            font-size: 12px;
+            color: #6c757d;
         }
         .footer a {
-            color: #4299e1;
+            color: #667eea;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: #764ba2;
+        }
+        .footer .links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #e9ecef;
             border-top: 3px solid #667eea;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
+        }
+        .expire-info {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+        /* Confetti animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            z-index: 1000;
+            animation: confetti-fall 3s linear forwards;
+        }
+        @keyframes confetti-fall {
+            to {
+                top: 100vh;
+                transform: rotate(720deg);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo">R$</div>
-            <h1>Robux Reward</h1>
-            <p class="subtitle">Key của bạn đã sẵn sàng! 🎁</p>
-        </div>
+        <div class="logo">R$</div>
+        <h1>🎉 Robux Reward</h1>
+        <p class="subtitle">Hoàn thành! Key của bạn đã sẵn sàng</p>
+        
+        <div id="statusBadge"></div>
+        
         <div class="key-container">
-            <div class="key-label">🔐 Key:</div>
-            <div class="key-display" id="keyDisplay">
-                <span class="loading"></span> Đang tải...
+            <div class="key-label">🔐 Your Key</div>
+            <div class="key-display" id="keyDisplay" onclick="selectKey()">
+                <span class="loading"></span>
             </div>
+            <div class="expire-info" id="expireInfo"></div>
         </div>
-        <button class="copy-btn" id="copyBtn" onclick="copyKey()">📋 Sao chép</button>
-        <div class="copy-success" id="copySuccess">✅ Đã sao chép!</div>
+        
+        <button class="copy-btn" id="copyBtn" onclick="copyKey()" disabled>
+            <span id="btnIcon">📋</span>
+            <span id="btnText">Sao chép Key</span>
+        </button>
+        
         <div class="instruction">
-            <h3>📖 Hướng dẫn:</h3>
+            <h3>📖 Hướng dẫn sử dụng</h3>
             <ol>
-                <li>Nhấn "Sao chép" để copy key</li>
-                <li>Quay lại Discord</li>
-                <li>Dùng lệnh <strong>/getcoin &lt;key&gt;</strong></li>
+                <li>Nhấn <strong>"Sao chép Key"</strong> ở trên</li>
+                <li>Quay lại <strong>Discord Server</strong></li>
+                <li>Dùng lệnh: <code>/getcoin [key]</code></li>
+                <li>Nhận Robux thành công! 🎁</li>
             </ol>
         </div>
+        
         <div class="footer">
-            <p>🤖 <a href="https://discord.com/users/1438073384805072998">@RobuxRewardBot</a> | 
-            📞 <a href="https://discord.gg/kJskg6G2hz">Support</a></p>
+            <div class="links">
+                <a href="https://discord.gg/kJskg6G2hz" target="_blank">💬 Discord Server</a>
+                <a href="https://discord.com/users/1438073384805072998" target="_blank">🤖 Bot Profile</a>
+            </div>
+            <p style="margin-top: 12px; opacity: 0.7;">© 2025 Robux Reward Bot</p>
         </div>
     </div>
+    
+    <div class="toast" id="toast">✅ Đã sao chép key!</div>
+
     <script>
+        let currentKey = null;
+        
+        // Lấy key từ URL
         function getKeyFromURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('key') || 'KEY_NOT_FOUND';
+            const params = new URLSearchParams(window.location.search);
+            return params.get('key');
         }
-        function displayKey() {
+        
+        // Khởi tạo trang
+        function init() {
             const key = getKeyFromURL();
             const keyDisplay = document.getElementById('keyDisplay');
-            if (key && key !== 'KEY_NOT_FOUND' && key.length > 5) {
-                keyDisplay.textContent = key;
-            } else {
-                keyDisplay.innerHTML = '<span style="color: #e53e3e;">❌ Key không hợp lệ</span>';
-                document.getElementById('copyBtn').style.display = 'none';
-            }
-        }
-        async function copyKey() {
-            const key = getKeyFromURL();
-            try {
-                await navigator.clipboard.writeText(key);
-                showCopySuccess();
-            } catch (err) {
-                const textArea = document.createElement('textarea');
-                textArea.value = key;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                showCopySuccess();
-            }
-        }
-        function showCopySuccess() {
             const copyBtn = document.getElementById('copyBtn');
-            const copySuccess = document.getElementById('copySuccess');
-            copySuccess.style.display = 'block';
-            copyBtn.innerHTML = '🚀 Quay lại Bot!';
-            copyBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+            const statusBadge = document.getElementById('statusBadge');
+            const expireInfo = document.getElementById('expireInfo');
+            
+            // Giả lập loading
             setTimeout(() => {
-                copySuccess.style.display = 'none';
-                copyBtn.innerHTML = '📋 Sao chép';
-                copyBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                if (key && key.length >= 6) {
+                    currentKey = key;
+                    keyDisplay.textContent = key;
+                    keyDisplay.classList.remove('error');
+                    copyBtn.disabled = false;
+                    
+                    statusBadge.innerHTML = '<span class="status-badge status-success">✓ Key hợp lệ</span>';
+                    expireInfo.textContent = '⏰ Key có hiệu lực trong 5 phút';
+                    
+                    // Hiệu ứng confetti
+                    createConfetti();
+                } else {
+                    keyDisplay.innerHTML = '❌ Key không hợp lệ hoặc đã hết hạn';
+                    keyDisplay.classList.add('error');
+                    copyBtn.disabled = true;
+                    
+                    statusBadge.innerHTML = '<span class="status-badge status-error">✗ Không tìm thấy key</span>';
+                    expireInfo.textContent = '';
+                }
+            }, 800);
+        }
+        
+        // Copy key
+        async function copyKey() {
+            if (!currentKey) return;
+            
+            const copyBtn = document.getElementById('copyBtn');
+            const btnIcon = document.getElementById('btnIcon');
+            const btnText = document.getElementById('btnText');
+            
+            try {
+                await navigator.clipboard.writeText(currentKey);
+            } catch {
+                // Fallback
+                const ta = document.createElement('textarea');
+                ta.value = currentKey;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+            
+            // Animation
+            copyBtn.classList.add('copied');
+            btnIcon.textContent = '✅';
+            btnText.textContent = 'Đã sao chép!';
+            showToast();
+            
+            setTimeout(() => {
+                copyBtn.classList.remove('copied');
+                btnIcon.textContent = '📋';
+                btnText.textContent = 'Sao chép Key';
             }, 3000);
         }
-        document.addEventListener('DOMContentLoaded', displayKey);
+        
+        // Select key khi click
+        function selectKey() {
+            const keyDisplay = document.getElementById('keyDisplay');
+            if (currentKey) {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(keyDisplay);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
+        
+        // Toast notification
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+        
+        // Confetti effect
+        function createConfetti() {
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 50);
+            }
+        }
+        
+        // Start
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
