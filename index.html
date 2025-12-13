@@ -12,17 +12,16 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Thay đổi link hình nền ở đây */
             background: url('https://images.unsplash.com/photo-1558618047-3c8c76ca335b?w=1920&h=1080&fit=crop&auto=format') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: auto; /* ✅ ĐỔI TỪ hidden → auto */
             position: relative;
+            padding: 10px; /* ✅ THÊM padding cho mobile */
         }
-        /* Overlay tối để chữ dễ đọc */
         body::before {
             content: '';
             position: fixed;
@@ -33,7 +32,6 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
-        /* Hiệu ứng particles */
         body::after {
             content: '';
             position: absolute;
@@ -57,39 +55,35 @@
         .container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 24px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
+            padding: 25px; /* ✅ GIẢM từ 40px → 25px */
+            max-width: 420px; /* ✅ GIẢM từ 500px → 420px */
+            width: 95%; /* ✅ TĂNG từ 90% → 95% */
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
             text-align: center;
             position: relative;
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             animation: slideUp 0.8s ease-out;
+            max-height: 90vh; /* ✅ GIỚI HẠN chiều cao */
+            overflow-y: auto; /* ✅ CHO PHÉP SCROLL VỌT */
         }
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .header {
-            margin-bottom: 30px;
+            margin-bottom: 20px; /* ✅ GIẢM từ 30px */
         }
         .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
+            width: 100px; /* ✅ GIẢM kích thước logo */
+            height: 100px;
+            margin: 0 auto 15px; /* ✅ GIẢM margin */
             background: linear-gradient(135deg, #00D4FF 0%, #0099CC 50%, #FF6B6B 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 60px;
+            font-size: 48px; /* ✅ GIẢM từ 60px */
             color: white;
             font-weight: bold;
             box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4);
@@ -119,22 +113,22 @@
         }
         h1 {
             color: #1a1a2e;
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 28px; /* ✅ GIẢM từ 32px */
+            margin-bottom: 8px; /* ✅ GIẢM từ 10px */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
             font-weight: 800;
         }
         .subtitle {
             color: #4a5568;
-            font-size: 16px;
-            margin-bottom: 30px;
+            font-size: 14px; /* ✅ GIẢM từ 16px */
+            margin-bottom: 25px; /* ✅ GIẢM từ 30px */
             font-weight: 500;
         }
         .key-container {
             background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
             border-radius: 20px;
-            padding: 25px;
-            margin: 20px 0;
+            padding: 20px; /* ✅ GIẢM từ 25px */
+            margin: 15px 0; /* ✅ GIẢM từ 20px */
             border: 3px solid;
             border-image: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4) 1;
             position: relative;
@@ -151,34 +145,32 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
             transition: left 0.6s;
         }
-        .key-container:hover::before {
-            left: 100%;
-        }
+        .key-container:hover::before { left: 100%; }
         .key-container:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
         .key-label {
             color: #2d3748;
-            font-size: 14px;
-            margin-bottom: 12px;
+            font-size: 13px; /* ✅ GIẢM từ 14px */
+            margin-bottom: 10px; /* ✅ GIẢM từ 12px */
             text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: 600;
         }
         .key-display {
             font-family: 'Courier New', 'Consolas', monospace;
-            font-size: 28px;
+            font-size: 24px; /* ✅ GIẢM từ 28px - VUA MÀN HÌNH */
             font-weight: 800;
             color: #1a202c;
-            letter-spacing: 4px;
+            letter-spacing: 3px; /* ✅ GIẢM từ 4px */
             word-break: break-all;
             user-select: all;
             transition: all 0.3s ease;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
             background: rgba(255,255,255,0.5);
-            padding: 10px;
-            border-radius: 10px;
+            padding: 12px; /* ✅ TĂNG padding để dễ đọc */
+            border-radius: 12px;
             cursor: pointer;
         }
         .key-display:hover {
@@ -189,26 +181,28 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 16px 40px;
+            padding: 14px 32px; /* ✅ GIẢM từ 16px 40px */
             border-radius: 50px;
-            font-size: 18px;
+            font-size: 16px; /* ✅ GIẢM từ 18px */
             font-weight: bold;
             cursor: pointer;
-            margin-top: 25px;
+            margin-top: 20px; /* ✅ GIẢM từ 25px */
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
             position: relative;
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 1px;
+            width: 100%; /* ✅ FULL WIDTH */
+            max-width: 280px; /* ✅ GIỚI HẠN */
+            margin-left: auto;
+            margin-right: auto;
         }
         .copy-btn:hover {
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
         }
-        .copy-btn:active {
-            transform: translateY(-1px) scale(1);
-        }
+        .copy-btn:active { transform: translateY(-1px) scale(1); }
         .copy-btn::after {
             content: '';
             position: absolute;
@@ -221,14 +215,11 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-        .copy-btn:active::after {
-            width: 400px;
-            height: 400px;
-        }
+        .copy-btn:active::after { width: 400px; height: 400px; }
         .copy-success {
             background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 15px; /* ✅ GIẢM từ 20px */
+            padding: 12px; /* ✅ GIẢM từ 15px */
             border-radius: 15px;
             color: white;
             font-weight: bold;
@@ -237,53 +228,46 @@
             box-shadow: 0 10px 30px rgba(72, 187, 120, 0.4);
         }
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(-20px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .instruction {
             background: rgba(255, 255, 255, 0.8);
-            border-left: 5px solid linear-gradient(45deg, #FF6B6B, #4ECDC4);
-            padding: 20px;
+            border-left: 4px solid #FF6B6B; /* ✅ SỬA LỖI CSS */
+            padding: 15px; /* ✅ GIẢM từ 20px */
             border-radius: 12px;
-            margin-top: 30px;
+            margin-top: 20px; /* ✅ GIẢM từ 30px */
             text-align: left;
             color: #2d3748;
-            font-size: 15px;
-            line-height: 1.7;
+            font-size: 13px; /* ✅ GIẢM từ 15px */
+            line-height: 1.6; /* ✅ GIẢM từ 1.7 */
             backdrop-filter: blur(10px);
         }
         .instruction h3 {
             color: #1a202c;
-            margin-bottom: 15px;
-            font-size: 18px;
+            margin-bottom: 12px; /* ✅ GIẢM từ 15px */
+            font-size: 15px; /* ✅ GIẢM từ 18px */
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px; /* ✅ GIẢM từ 10px */
         }
-        .instruction ol {
-            margin-left: 25px;
-        }
+        .instruction ol { margin-left: 20px; } /* ✅ GIẢM từ 25px */
         .instruction li {
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* ✅ GIẢM từ 10px */
             position: relative;
-            padding-left: 10px;
+            padding-left: 8px; /* ✅ GIẢM từ 10px */
         }
         .instruction li::before {
             content: '✨';
             position: absolute;
-            left: -25px;
+            left: -22px; /* ✅ GIẢM từ -25px */
+            font-size: 12px;
         }
         .footer {
-            margin-top: 35px;
+            margin-top: 25px; /* ✅ GIẢM từ 35px */
             color: #718096;
-            font-size: 13px;
-            padding-top: 20px;
+            font-size: 12px; /* ✅ GIẢM từ 13px */
+            padding-top: 15px; /* ✅ GIẢM từ 20px */
             border-top: 1px solid rgba(0,0,0,0.1);
         }
         .footer a {
@@ -292,41 +276,53 @@
             font-weight: bold;
             transition: color 0.3s;
         }
-        .footer a:hover {
-            color: #3182ce;
-        }
-        @media (max-width: 600px) {
+        .footer a:hover { color: #3182ce; }
+
+        /* ✅ MOBILE PERFECT - DƯỚI 500px */
+        @media (max-width: 500px) {
+            body { padding: 5px; }
             .container {
-                padding: 30px 25px;
-                margin: 20px;
-            }
-            h1 {
-                font-size: 28px;
-            }
-            .key-display {
-                font-size: 22px;
-                letter-spacing: 2px;
+                padding: 20px 18px; /* ✅ SIÊU NHỎ */
+                width: 98%;
+                border-radius: 20px;
+                max-height: 95vh;
             }
             .logo {
-                width: 100px;
-                height: 100px;
-                font-size: 50px;
+                width: 85px;
+                height: 85px;
+                font-size: 42px;
             }
+            h1 { font-size: 24px; }
+            .subtitle { font-size: 13px; }
+            .key-display {
+                font-size: 20px; /* ✅ HOÀN HẢO CHO MOBILE */
+                letter-spacing: 2px;
+                padding: 15px 10px; /* ✅ TĂNG padding để dễ bấm */
+            }
+            .key-label { font-size: 12px; }
             .copy-btn {
-                padding: 14px 30px;
-                font-size: 16px;
+                padding: 13px 25px;
+                font-size: 15px;
+                width: 100%;
+                max-width: none;
             }
+            .instruction {
+                padding: 12px;
+                font-size: 12px;
+                margin-top: 15px;
+            }
+            .instruction ol { margin-left: 18px; }
+            .footer { margin-top: 20px; font-size: 11px; }
         }
-        /* Loading animation */
         .loading {
             display: inline-block;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             border: 3px solid #f3f3f3;
             border-top: 3px solid #667eea;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-left: 10px;
+            margin-left: 8px;
             vertical-align: middle;
         }
         @keyframes spin {
@@ -368,36 +364,27 @@
         </div>
     </div>
     <script>
-        // Lấy key từ URL parameter
         function getKeyFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('key') || 'KEY_NOT_FOUND';
         }
-        // Hiển thị key khi page load
         function displayKey() {
             const key = getKeyFromURL();
             const keyDisplay = document.getElementById('keyDisplay');
-            
             if (key && key !== 'KEY_NOT_FOUND' && key.length > 5) {
                 keyDisplay.textContent = key;
                 keyDisplay.style.color = '#1a202c';
-                document.getElementById('copyBtn').style.display = 'inline-block';
             } else {
-                keyDisplay.innerHTML = '<span style="color: #e53e3e; font-size: 20px;">❌ Key không hợp lệ hoặc đã hết hạn</span>';
+                keyDisplay.innerHTML = '<span style="color: #e53e3e; font-size: 18px;">❌ Key không hợp lệ hoặc đã hết hạn</span>';
                 document.getElementById('copyBtn').style.display = 'none';
             }
         }
-        // Copy key vào clipboard
         async function copyKey() {
             const key = getKeyFromURL();
-            const copyBtn = document.getElementById('copyBtn');
-            const copySuccess = document.getElementById('copySuccess');
-            
             try {
                 await navigator.clipboard.writeText(key);
                 showCopySuccess();
             } catch (err) {
-                // Fallback
                 const textArea = document.createElement('textarea');
                 textArea.value = key;
                 document.body.appendChild(textArea);
@@ -410,18 +397,15 @@
         function showCopySuccess() {
             const copyBtn = document.getElementById('copyBtn');
             const copySuccess = document.getElementById('copySuccess');
-            
             copySuccess.style.display = 'block';
             copyBtn.innerHTML = '🚀 Quay lại Bot!';
             copyBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
-            
             setTimeout(() => {
                 copySuccess.style.display = 'none';
                 copyBtn.innerHTML = '📋 Sao chép';
                 copyBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
             }, 4000);
         }
-        // Click để select key
         document.addEventListener('DOMContentLoaded', function() {
             displayKey();
             document.getElementById('keyDisplay').addEventListener('click', function() {
