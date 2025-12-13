@@ -1,450 +1,419 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Banner Generator - Robux Reward</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            overflow-x: auto;
-        }
-
+     }
         .header {
-            text-align: center;
             margin-bottom: 30px;
         }
-
-        .header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #6366f1, #0ea5e9, #10b981);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
-
-        .main-container {
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #00D4FF 0%, #0099CC 50%, #FF6B6B 100%);
+            border-radius: 50%;
             display: flex;
-            gap: 30px;
-            max-width: 1400px;
-            width: 100%;
-            align-items: flex-start;
-        }
-
-        .preview-section {
-            flex: 1;
-            max-width: 1000px;
-        }
-
-        .banner-preview {
-            width: 960px;
-            height: 540px;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(99, 102, 241, 0.3);
-            background: #000;
-            position: relative;
-            cursor: grab;
-            transition: transform 0.3s;
-        }
-
-        .banner-preview:active {
-            cursor: grabbing;
-        }
-
-        .banner-preview:hover {
-            transform: scale(1.02);
-        }
-
-        .controls-section {
-            width: 350px;
-            background: rgba(20, 25, 40, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            height: fit-content;
-        }
-
-        .control-group {
-            margin-bottom: 25px;
-        }
-
-        .control-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #e2e8f0;
-            font-size: 0.95rem;
-        }
-
-        input[type="text"], input[type="color"], select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 8px;
-            background: rgba(30, 40, 60, 0.8);
-            color: #ffffff;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        input[type="text"]:focus, input[type="color"]:focus, select:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
-
-        input[type="color"] {
-            height: 50px;
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        .preset-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .preset-btn {
-            padding: 12px;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(14, 165, 233, 0.2));
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 8px;
-            color: #ffffff;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .preset-btn:hover {
-            background: linear-gradient(135deg, #6366f1, #0ea5e9);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
-        }
-
-        .download-section {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .download-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border: none;
-            border-radius: 12px;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
             color: white;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4);
+            animation: pulse 2s infinite;
             position: relative;
             overflow: hidden;
         }
-
-        .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
         }
-
-        .download-btn:active {
-            transform: translateY(-1px);
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
-
-        .info {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 8px;
-            padding: 15px;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        h1 {
+            color: #1a1a2e;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: 800;
+        }
+        .subtitle {
+            color: #4a5568;
+            font-size: 16px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        .key-container {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 3px solid;
+            border-image: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4) 1;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .key-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transition: left 0.6s;
+        }
+        .key-container:hover::before {
+            left: 100%;
+        }
+        .key-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .key-label {
+            color: #2d3748;
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        .key-display {
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 28px;
+            font-weight: 800;
+            color: #1a202c;
+            letter-spacing: 4px;
+            word-break: break-all;
+            user-select: all;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.5);
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .key-display:hover {
+            background: rgba(255,255,255,0.8);
+            color: #2d3748;
+        }
+        .copy-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .copy-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+        .copy-btn:active {
+            transform: translateY(-1px) scale(1);
+        }
+        .copy-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .copy-btn:active::after {
+            width: 400px;
+            height: 400px;
+        }
+        .copy-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             margin-top: 20px;
-            font-size: 0.9rem;
-            text-align: center;
+            padding: 15px;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            display: none;
+            animation: slideIn 0.5s ease;
+            box-shadow: 0 10px 30px rgba(72, 187, 120, 0.4);
         }
-
-        @media (max-width: 1200px) {
-            .main-container {
-                flex-direction: column;
-                align-items: center;
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.9);
             }
-
-            .controls-section {
-                width: 100%;
-                max-width: 500px;
-            }
-
-            .banner-preview {
-                width: 100%;
-                max-width: 960px;
-                height: 540px;
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
-
-        @media (max-width: 768px) {
-            .preset-buttons {
-                grid-template-columns: 1fr;
+        .instruction {
+            background: rgba(255, 255, 255, 0.8);
+            border-left: 5px solid linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: left;
+            color: #2d3748;
+            font-size: 15px;
+            line-height: 1.7;
+            backdrop-filter: blur(10px);
+        }
+        .instruction h3 {
+            color: #1a202c;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .instruction ol {
+            margin-left: 25px;
+        }
+        .instruction li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 10px;
+        }
+        .instruction li::before {
+            content: '✨';
+            position: absolute;
+            left: -25px;
+        }
+        .footer {
+            margin-top: 35px;
+            color: #718096;
+            font-size: 13px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        .footer a {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: #3182ce;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 25px;
+                margin: 20px;
             }
+            h1 {
+                font-size: 28px;
+            }
+            .key-display {
+                font-size: 22px;
+                letter-spacing: 2px;
+            }
+            .logo {
+                width: 100px;
+                height: 100px;
+                font-size: 50px;
+            }
+            .copy-btn {
+                padding: 14px 30px;
+                font-size: 16px;
+            }
+        }
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🎮 Discord Banner Generator</h1>
-        <p>Tạo banner server Discord chủ đề Robux Reward - Kích thước chuẩn 960x540px</p>
-    </div>
-
-    <div class="main-container">
-        <div class="preview-section">
-            <canvas id="bannerCanvas" class="banner-preview" width="960" height="540"></canvas>
+    <div class="container">
+        <div class="header">
+            <div class="logo">R$</div>
+            <h1>Robux Reward</h1>
+            <p class="subtitle">Key của bạn ở bên dưới</p>
         </div>
-
-        <div class="controls-section">
-            <div class="control-group">
-                <label>Chủ đề Preset</label>
-                <div class="preset-buttons">
-                    <button class="preset-btn" onclick="loadPreset('robux')">Robux Classic</button>
-                    <button class="preset-btn" onclick="loadPreset('reward')">Reward Glow</button>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label>Tiêu đề chính</label>
-                <input type="text" id="titleText" value="ROBUX REWARD" maxlength="30">
-            </div>
-
-            <div class="control-group">
-                <label>Phụ đề</label>
-                <input type="text" id="subtitleText" value="Nhận Robux Miễn Phí ✨" maxlength="50">
-            </div>
-
-            <div class="control-group">
-                <label>Màu nền 1</label>
-                <input type="color" id="bgColor1" value="#667eea">
-            </div>
-
-            <div class="control-group">
-                <label>Màu nền 2</label>
-                <input type="color" id="bgColor2" value="#0ea5e9">
-            </div>
-
-            <div class="control-group">
-                <label>Màu chữ chính</label>
-                <input type="color" id="textColor" value="#ffffff">
-            </div>
-
-            <div class="control-group">
-                <label>Icon (Emoji)</label>
-                <select id="iconEmoji">
-                    <option value="🎮">🎮 Game Controller</option>
-                    <option value="💎">💎 Diamond</option>
-                    <option value="🔥">🔥 Fire</option>
-                    <option value="⭐">⭐ Star</option>
-                    <option value="✨">✨ Sparkles</option>
-                    <option value="R$">R$ Robux</option>
-                </select>
-            </div>
-
-            <div class="download-section">
-                <button class="download-btn" onclick="downloadBanner()">
-                    💾 Tải Banner PNG (960x540)
-                </button>
-            </div>
-
-            <div class="info">
-                <strong>Hướng dẫn:</strong><br>
-                1. Tùy chỉnh banner<br>
-                2. Click "Tải Banner PNG"<br>
-                3. Upload lên Discord Server Settings
+        <div class="key-container">
+            <div class="key-label">🔐 Key:</div>
+            <div class="key-display" id="keyDisplay">
+                <span class="loading"></span> Đang tải key...
             </div>
         </div>
+        <button class="copy-btn" id="copyBtn" onclick="copyKey()">
+            📋 Sao chép
+        </button>
+        <div class="copy-success" id="copySuccess">
+            ✅ Đã sao chép thành công!
+        </div>
+        <div class="instruction">
+            <h3>📖 Hướng dẫn sử dụng:</h3>
+            <ol>
+                <li>Nhấn "Sao chép" để copy key</li>
+                <li>Quay lại discord</strong></li>
+                <li><strong>Dùng lệnh /getcoin <key></strong>!</li>
+            </ol>
+        </div>
+        <div class="footer">
+            <p>🤖 Bot: <a href="https://discord.com/users/1438073384805072998" target="_blank">@RobuxRewardBot</a> | 
+            📞 Support: <a href="https://discord.gg/kJskg6G2hz" target="_blank">@SupportServer</a></p>
+        </div>
     </div>
-
     <script>
-        const canvas = document.getElementById('bannerCanvas');
-        const ctx = canvas.getContext('2d');
-
-        let particles = [];
-
-        // Tạo particles
-        function createParticles() {
-            particles = [];
-            for (let i = 0; i < 50; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 4 + 1,
-                    speedX: (Math.random() - 0.5) * 0.5,
-                    speedY: (Math.random() - 0.5) * 0.5,
-                    opacity: Math.random() * 0.5 + 0.2
-                });
+        // Lấy key từ URL parameter
+        function getKeyFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('key') || 'KEY_NOT_FOUND';
+        }
+        // Hiển thị key khi page load
+        function displayKey() {
+            const key = getKeyFromURL();
+            const keyDisplay = document.getElementById('keyDisplay');
+            
+            if (key && key !== 'KEY_NOT_FOUND' && key.length > 5) {
+                keyDisplay.textContent = key;
+                keyDisplay.style.color = '#1a202c';
+                document.getElementById('copyBtn').style.display = 'inline-block';
+            } else {
+                keyDisplay.innerHTML = '<span style="color: #e53e3e; font-size: 20px;">❌ Key không hợp lệ hoặc đã hết hạn</span>';
+                document.getElementById('copyBtn').style.display = 'none';
             }
         }
-
-        // Vẽ banner
-        function drawBanner() {
-            const title = document.getElementById('titleText').value;
-            const subtitle = document.getElementById('subtitleText').value;
-            const bg1 = document.getElementById('bgColor1').value;
-            const bg2 = document.getElementById('bgColor2').value;
-            const textColor = document.getElementById('textColor').value;
-            const icon = document.getElementById('iconEmoji').value;
-
-            // Clear canvas
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Gradient background
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, bg1);
-            gradient.addColorStop(1, bg2);
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Glow overlay
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Particles
-            particles.forEach(p => {
-                ctx.save();
-                ctx.globalAlpha = p.opacity;
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-
-                p.x += p.speedX;
-                p.y += p.speedY;
-                if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
-                if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+        // Copy key vào clipboard
+        async function copyKey() {
+            const key = getKeyFromURL();
+            const copyBtn = document.getElementById('copyBtn');
+            const copySuccess = document.getElementById('copySuccess');
+            
+            try {
+                await navigator.clipboard.writeText(key);
+                showCopySuccess();
+            } catch (err) {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = key;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopySuccess();
+            }
+        }
+        function showCopySuccess() {
+            const copyBtn = document.getElementById('copyBtn');
+            const copySuccess = document.getElementById('copySuccess');
+            
+            copySuccess.style.display = 'block';
+            copyBtn.innerHTML = '🚀 Quay lại Bot!';
+            copyBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+            
+            setTimeout(() => {
+                copySuccess.style.display = 'none';
+                copyBtn.innerHTML = '📋 Sao chép';
+                copyBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }, 4000);
+        }
+        // Click để select key
+        document.addEventListener('DOMContentLoaded', function() {
+            displayKey();
+            document.getElementById('keyDisplay').addEventListener('click', function() {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(this);
+                selection.removeAllRanges();
+                selection.addRange(range);
             });
-
-            // Corner glows
-            const cornerGradient1 = ctx.createRadialGradient(100, 100, 0, 100, 100, 200);
-            cornerGradient1.addColorStop(0, 'rgba(255,255,255,0.3)');
-            cornerGradient1.addColorStop(1, 'transparent');
-            ctx.fillStyle = cornerGradient1;
-            ctx.fillRect(0, 0, 200, 200);
-
-            const cornerGradient2 = ctx.createRadialGradient(canvas.width - 100, canvas.height - 100, 0, canvas.width - 100, canvas.height - 100, 200);
-            cornerGradient2.addColorStop(0, 'rgba(255,255,255,0.3)');
-            cornerGradient2.addColorStop(1, 'transparent');
-            ctx.fillStyle = cornerGradient2;
-            ctx.fillRect(canvas.width - 200, canvas.height - 200, 200, 200);
-
-            // Icon
-            ctx.font = '140px Arial Black';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#ffffff';
-            ctx.shadowColor = '#ffffff';
-            ctx.shadowBlur = 20;
-            ctx.fillText(icon, canvas.width / 2, 200);
-            ctx.shadowBlur = 0;
-
-            // Title
-            ctx.font = 'bold 100px Arial Black';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = textColor;
-            ctx.shadowColor = textColor;
-            ctx.shadowBlur = 30;
-            ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-            ctx.lineWidth = 3;
-            ctx.strokeText(title.toUpperCase(), canvas.width / 2, 320);
-            ctx.shadowBlur = 15;
-            ctx.fillText(title.toUpperCase(), canvas.width / 2, 320);
-            ctx.shadowBlur = 0;
-
-            // Subtitle
-            ctx.font = 'bold 36px Arial';
-            ctx.fillStyle = 'rgba(255,255,255,0.9)';
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.fillText(subtitle, canvas.width / 2, 430);
-            ctx.shadowBlur = 0;
-
-            // Badge
-            ctx.fillStyle = 'rgba(255,255,255,0.15)';
-            ctx.fillRect(canvas.width / 2 - 150, 470, 300, 50);
-            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(canvas.width / 2 - 150, 470, 300, 50);
-
-            ctx.font = 'bold 24px Arial';
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('100% FREE & SAFE', canvas.width / 2, 495);
-        }
-
-        // Presets
-        function loadPreset(preset) {
-            if (preset === 'robux') {
-                document.getElementById('titleText').value = 'ROBUX REWARD';
-                document.getElementById('subtitleText').value = 'Nhận Robux Miễn Phí 🔥';
-                document.getElementById('bgColor1').value = '#667eea';
-                document.getElementById('bgColor2').value = '#0ea5e9';
-                document.getElementById('textColor').value = '#ffffff';
-                document.getElementById('iconEmoji').value = 'R$';
-            } else if (preset === 'reward') {
-                document.getElementById('titleText').value = 'FREE ROBUX';
-                document.getElementById('subtitleText').value = 'Reward Generator ✨';
-                document.getElementById('bgColor1').value = '#6366f1';
-                document.getElementById('bgColor2').value = '#10b981';
-                document.getElementById('textColor').value = '#10b981';
-                document.getElementById('iconEmoji').value = '💎';
+        });
+    </script>
+</body>
+</html>
+Key() {
+            const key = getKeyFromURL();
+            const keyDisplay = document.getElementById('keyDisplay');
+            
+            if (key && key !== 'KEY_NOT_FOUND' && key.length > 5) {
+                keyDisplay.textContent = key;
+                keyDisplay.style.color = '#1a202c';
+                document.getElementById('copyBtn').style.display = 'inline-block';
+            } else {
+                keyDisplay.innerHTML = '<span style="color: #e53e3e; font-size: 20px;">❌ Key không hợp lệ hoặc đã hết hạn</span>';
+                document.getElementById('copyBtn').style.display = 'none';
             }
-            drawBanner();
         }
-
-        // Download
-        function downloadBanner() {
-            const link = document.createElement('a');
-            link.download = 'discord-banner-robux-reward.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
+        // Copy key vào clipboard
+        async function copyKey() {
+            const key = getKeyFromURL();
+            const copyBtn = document.getElementById('copyBtn');
+            const copySuccess = document.getElementById('copySuccess');
+            
+            try {
+                await navigator.clipboard.writeText(key);
+                showCopySuccess();
+            } catch (err) {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = key;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopySuccess();
+            }
         }
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            drawBanner();
-
-            // Real-time updates
-            const inputs = ['titleText', 'subtitleText', 'bgColor1', 'bgColor2', 'textColor', 'iconEmoji'];
-            inputs.forEach(id => {
-                document.getElementById(id).addEventListener('input', drawBanner);
+        function showCopySuccess() {
+            const copyBtn = document.getElementById('copyBtn');
+            const copySuccess = document.getElementById('copySuccess');
+            
+            copySuccess.style.display = 'block';
+            copyBtn.innerHTML = '🚀 Quay lại Bot!';
+            copyBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+            
+            setTimeout(() => {
+                copySuccess.style.display = 'none';
+                copyBtn.innerHTML = '📋 Sao chép';
+                copyBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }, 4000);
+        }
+        // Click để select key
+        document.addEventListener('DOMContentLoaded', function() {
+            displayKey();
+            document.getElementById('keyDisplay').addEventListener('click', function() {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(this);
+                selection.removeAllRanges();
+                selection.addRange(range);
             });
-
-            // Animate particles
-            function animate() {
-                drawBanner();
-                requestAnimationFrame(animate);
-            }
-            animate();
         });
     </script>
 </body>
