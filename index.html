@@ -479,7 +479,13 @@
     <script>
         let currentKeyValue = '';
 
-        // Function để nhận key từ bot (được gọi từ callback)
+        // Hàm lấy URL parameters
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Function để nhận key từ bot (được gọi từ callback hoặc URL)
         window.receiveKeyFromBot = function(key) {
             currentKeyValue = key;
             const currentKeyEl = document.getElementById('currentKey');
@@ -534,8 +540,17 @@
             }, 3500);
         }
 
+        // Khi trang load, kiểm tra xem có key trong URL không
         document.addEventListener('DOMContentLoaded', () => {
             console.log('Robux Reward interface loaded and ready for bot callbacks');
+            
+            // Đọc key từ URL parameter
+            const keyFromUrl = getUrlParameter('key');
+            
+            if (keyFromUrl) {
+                // Nếu có key trong URL, hiển thị nó
+                receiveKeyFromBot(keyFromUrl);
+            }
         });
     </script>
 </body>
